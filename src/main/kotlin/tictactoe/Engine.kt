@@ -1,12 +1,10 @@
 package tictactoe
 
 import tictactoe.exception.InvalidConfigException
-import tictactoe.exception.ParseException
 
 class Engine(config: Config) {
 
     private lateinit var game: Game
-
 
     private fun initialize() {
         val players = loadPlayers()
@@ -16,21 +14,18 @@ class Engine(config: Config) {
     fun startGame() {
         initialize()
         welcomeAndInform()
-//        runGame()
+        runGame()
     }
-
-    fun close() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 
     private val writer = config.writer
-    private val reader = config.reader
     private val playerCount = config.playerCount
     private val symbols = config.symbols
 
     private fun runGame() {
-        while (!game.isOver()) {
+        game.initialize()
+        writer.println("Current State :")
+        game.printCurrentState(writer)
+        /*while (!game.isOver()) {
             val player = game.nextPlayer()
             when (player) {
                 is Human -> game.makeMove(askMove(player))
@@ -38,7 +33,7 @@ class Engine(config: Config) {
             }
             game.printCurrentState(writer)
         }
-        writer.println("Congratulations Player:${game.getWinner()} has won the game")
+        writer.println("Congratulations Player:${game.getWinner()} has won the game")*/
     }
 
     private fun welcomeAndInform() {
@@ -48,8 +43,19 @@ class Engine(config: Config) {
         writer.println("Game Begins Now")
     }
 
+    private fun loadPlayers(): List<Player> {
+        if (playerCount != symbols.size || playerCount < 3)
+            throw InvalidConfigException("Number of symbols and players not equal")
 
-    private fun askMove(player: Player): Move {
+        val players = mutableListOf<Player>()
+        for (index in 1 until playerCount) {
+            players.add(Player(id = "Human-$index", symbol = symbols[index - 1]))
+        }
+        players.add(Player(id = "Bot", symbol = symbols[playerCount - 1]))
+        return players
+    }
+
+    /*private fun askMove(player: Player): Move {
         writer.println("Next move for Player:${player.id}")
         val moveString = reader.readLine()
         val move: Move
@@ -60,20 +66,7 @@ class Engine(config: Config) {
             return askMove(player)
         }
         return move
-    }
-
-
-    private fun loadPlayers(): List<Player> {
-        if(playerCount!=symbols.size)
-            throw InvalidConfigException("Number of symbols and players not equal")
-
-        val players = mutableListOf<Player>()
-        for (index in 1 until playerCount){
-            players.add(Player(id = "Human-$index",symbol = symbols[index-1]))
-        }
-        players.add(Player(id = "Bot", symbol = symbols[playerCount-1]))
-        return players
-    }
+    }*/
 
 }
 

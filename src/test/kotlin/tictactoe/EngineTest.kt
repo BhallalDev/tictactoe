@@ -1,16 +1,15 @@
 package tictactoe
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import tictactoe.exception.InvalidConfigException
-import tictactoe.io.Reader
-import tictactoe.io.Writer
 
 class EngineTest {
     private val reader = TestReader()
     private val writer = TestWriter()
 
     @Test
-    fun `given a config should greet with correct number of players and symbols`() {
+    fun `given a valid config it should greet with correct number of players and symbols`() {
         val config = validConfig()
         val subject = Engine(config)
         subject.startGame()
@@ -22,7 +21,7 @@ class EngineTest {
     }
 
     @Test
-    fun `given a config with 3 players should assign first two players as Human and last player as bot`() {
+    fun `given a valid config with 3 players it should assign first two players as Human and last player as bot`() {
         val config = validConfig()
         val subject = Engine(config)
         subject.startGame()
@@ -35,13 +34,35 @@ class EngineTest {
     @Test(expected = InvalidConfigException::class)
     fun `given a config where number of players and symbols does not match then fails with InvalidConfigException`() {
         val config = Config(
-            playerCount = 2,
-            symbols = listOf("A", "B", "C"),
+            playerCount = 3,
+            symbols = listOf("A", "B", "C", "D"),
             reader = reader,
             writer = writer
         )
         val subject = Engine(config)
         subject.startGame()
+    }
+
+    @Test(expected = InvalidConfigException::class)
+    fun `given a config where number of players is less than 3 then fails`() {
+        val config = Config(
+            playerCount = 2,
+            symbols = listOf("A", "B"),
+            reader = reader,
+            writer = writer
+        )
+        val subject = Engine(config)
+        subject.startGame()
+    }
+
+    @Test
+    fun `should print initial state as soon as the game starts`() {
+        val config = validConfig()
+        val subject = Engine(config)
+        subject.startGame()
+        assertEquals("_ _ _", writer.lines[8].trim())
+        assertEquals("_ _ _", writer.lines[9].trim())
+        assertEquals("_ _ _", writer.lines[10].trim())
     }
 
     private fun validConfig(): Config {
@@ -54,16 +75,3 @@ class EngineTest {
     }
 }
 
-class TestReader : Reader {
-    override fun readLine(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-}
-
-class TestWriter : Writer {
-    val lines = mutableListOf<String>()
-
-    override fun println(output: String) {
-        lines.add(output)
-    }
-}

@@ -1,4 +1,3 @@
 package tictactoe.exception
 
-class InvalidConfigException(message: String?) : RuntimeException(message)  {
-}
+class InvalidConfigException(message: String?) : RuntimeException(message)

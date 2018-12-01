@@ -13,5 +13,4 @@ fun main(args: Array<String>) {
 
     val engine = Engine(config)
     engine.startGame()
-    engine.close()
 }

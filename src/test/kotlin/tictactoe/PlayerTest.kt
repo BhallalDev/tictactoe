@@ -1,6 +1,0 @@
-package tictactoe
-
-class PlayerTest {
-
-
-}
