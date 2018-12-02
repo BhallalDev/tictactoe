@@ -6,16 +6,18 @@ import tictactoe.io.Writer
 
 class Game(private val players: List<Player>) {
 
+    private var currentTurn = 0
+
     private lateinit var state: Array<Array<Player?>>
 
-    private lateinit var winner: Player
+    private var winner: Player? = null
 
     fun initialize() {
-        state = arrayOf(
-            arrayOfNulls(3),
-            arrayOfNulls(3),
-            arrayOfNulls(3)
-        )
+        state = Array<Array<Player?>>(players.size) {
+            Array(players.size) {
+                null
+            }
+        }
     }
 
     fun printPlayerDetails(writer: Writer) {
@@ -40,7 +42,7 @@ class Game(private val players: List<Player>) {
         state[move.position.row][move.position.column] = move.player
     }
 
-    fun getWinner(): Player {
+    fun getWinner(): Player? {
         return winner
     }
 
@@ -87,13 +89,11 @@ class Game(private val players: List<Player>) {
                 if (tempPlayer == null) {
                     if (player != null)
                         tempPlayer = player
-                    else {
+                    else
                         foundWinner = false
-                    }
                 } else {
-                    if (tempPlayer != player) {
+                    if (tempPlayer != player)
                         foundWinner = false
-                    }
                 }
             }
             if (foundWinner)
@@ -181,12 +181,25 @@ class Game(private val players: List<Player>) {
                 if (column == null)
                     return false
             }
-
         }
         return true
     }
 
     fun nextPlayer(): Player {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (currentTurn == players.size) {
+            currentTurn = 0
+        }
+        return players[currentTurn++]
+    }
+
+    fun freePositions(): List<Position> {
+        val freePositions = mutableListOf<Position>()
+        for (row in 0 until players.size) {
+            for (column in 0 until players.size) {
+                if (state[row][column] == null)
+                    freePositions.add(Position(row, column))
+            }
+        }
+        return freePositions
     }
 }

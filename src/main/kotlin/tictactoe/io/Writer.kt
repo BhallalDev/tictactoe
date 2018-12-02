@@ -7,10 +7,22 @@ interface Writer {
 
 class ConsoleWriter : Writer {
     override fun print(output: String) {
-        print(output)
+        kotlin.io.print(output)
     }
 
     override fun println(output: String) {
-        println(output)
+        kotlin.io.println(output)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ConsoleWriter) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return javaClass.hashCode()
+    }
+
+
 }

@@ -1,10 +1,12 @@
 package tictactoe
 
-import tictactoe.exception.InvalidConfigException
-
 class Engine(config: Config) {
 
     private lateinit var game: Game
+    private val writer = config.writer
+    private val reader = config.reader
+    private val playerCount = config.playerCount
+    private val symbols = config.symbols
 
     private fun initialize() {
         val players = loadPlayers()
@@ -17,23 +19,22 @@ class Engine(config: Config) {
         runGame()
     }
 
-    private val writer = config.writer
-    private val playerCount = config.playerCount
-    private val symbols = config.symbols
-
     private fun runGame() {
         game.initialize()
         writer.println("Current State :")
         game.printCurrentState(writer)
-        /*while (!game.isOver()) {
+        while (!game.isOver()) {
             val player = game.nextPlayer()
             when (player) {
                 is Human -> game.makeMove(askMove(player))
-                is Bot -> game.makeMove(player.nextMove())
+                is Bot ->{
+                    writer.println("Computer playing now :")
+                    game.makeMove(player.nextMove(game))
+                }
             }
             game.printCurrentState(writer)
         }
-        writer.println("Congratulations Player:${game.getWinner()} has won the game")*/
+        writer.println("Congratulations Player:${game.getWinner()} has won the game")
     }
 
     private fun welcomeAndInform() {
@@ -44,29 +45,27 @@ class Engine(config: Config) {
     }
 
     private fun loadPlayers(): List<Player> {
-        if (playerCount != symbols.size || playerCount < 3)
-            throw InvalidConfigException("Number of symbols and players not equal")
-
         val players = mutableListOf<Player>()
         for (index in 1 until playerCount) {
-            players.add(Player(id = "Human-$index", symbol = symbols[index - 1]))
+            players.add(Human(id = "Human-$index", symbol = symbols[index - 1]))
         }
-        players.add(Player(id = "Bot", symbol = symbols[playerCount - 1]))
+        players.add(Bot(id = "Bot", symbol = symbols[playerCount - 1]))
         return players
     }
 
-    /*private fun askMove(player: Player): Move {
+    private fun askMove(player: Player): Move {
         writer.println("Next move for Player:${player.id}")
         val moveString = reader.readLine()
         val move: Move
         try {
-            move = InputProcessor.parse(moveString)
+            val position = InputProcessor.parse(moveString)
+            move = Move(player,position)
         } catch (e: ParseException) {
-            writer.println("Invalid reader, try again")
+            writer.println("Invalid input, try again")
             return askMove(player)
         }
         return move
-    }*/
+    }
 
 }
 

@@ -137,4 +137,32 @@ class GameTest {
         game.makeMove(move)
     }
 
+    @Test
+    fun `given initialized with n players, it creates a state of n * n`() {
+        val game = Game(players)
+        game.initialize()
+        game.printCurrentState(writer)
+        assertEquals("_ _ _", writer.lines[0].trim())
+        assertEquals("_ _ _", writer.lines[1].trim())
+        assertEquals("_ _ _", writer.lines[2].trim())
+    }
+
+    @Test
+    fun `should give free positions`() {
+        val game = Game(players)
+        game.initialize()
+        game.makeMove(Move(position = Position(2, 0), player = playerOne))
+        game.makeMove(Move(position = Position(1, 1), player = playerOne))
+        val freePositions  = game.freePositions()
+        assertEquals(7,freePositions.size)
+    }
+
+    @Test
+    fun `should return next turn in order`(){
+        val game = Game(players)
+        game.initialize()
+        assertEquals(game.nextPlayer(),playerOne)
+        game.makeMove(Move(position = Position(2, 0), player = playerOne))
+        assertEquals(game.nextPlayer(), playerTwo)
+    }
 }

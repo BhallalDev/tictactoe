@@ -31,30 +31,6 @@ class EngineTest {
         assert(writer.lines[5].contains("Bot"))
     }
 
-    @Test(expected = InvalidConfigException::class)
-    fun `given a config where number of players and symbols does not match then fails with InvalidConfigException`() {
-        val config = Config(
-            playerCount = 3,
-            symbols = listOf("A", "B", "C", "D"),
-            reader = reader,
-            writer = writer
-        )
-        val subject = Engine(config)
-        subject.startGame()
-    }
-
-    @Test(expected = InvalidConfigException::class)
-    fun `given a config where number of players is less than 3 then fails`() {
-        val config = Config(
-            playerCount = 2,
-            symbols = listOf("A", "B"),
-            reader = reader,
-            writer = writer
-        )
-        val subject = Engine(config)
-        subject.startGame()
-    }
-
     @Test
     fun `should print initial state as soon as the game starts`() {
         val config = validConfig()
