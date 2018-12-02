@@ -4,7 +4,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class InputProcessorTest{
-
     @Test
     fun `should parse valid move`(){
         val position = InputProcessor.parse("1,2")

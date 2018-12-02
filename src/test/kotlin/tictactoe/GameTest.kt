@@ -1,8 +1,8 @@
 package tictactoe
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import tictactoe.exception.DuplicateMoveException
 import tictactoe.exception.InvalidMoveException
 
 class GameTest {
@@ -125,7 +125,7 @@ class GameTest {
         assertEquals(playerOne,game.getWinner())
     }
 
-    @Test(expected = DuplicateMoveException::class)
+    @Test(expected = InvalidMoveException::class)
     fun `given a duplicate move is made, it fails`() {
         val game = Game(players)
         game.initialize()

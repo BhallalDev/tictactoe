@@ -1,5 +1,7 @@
 package tictactoe
 
+import tictactoe.exception.InvalidMoveException
+
 class Engine(config: Config) {
 
     private lateinit var game: Game
@@ -26,15 +28,22 @@ class Engine(config: Config) {
         while (!game.isOver()) {
             val player = game.nextPlayer()
             when (player) {
-                is Human -> game.makeMove(askMove(player))
-                is Bot ->{
+                is Human -> {
+                    val move = askMove(player)
+                    game.makeMove(move)
+                }
+                is Bot -> {
                     writer.println("Computer playing now :")
-                    game.makeMove(player.nextMove(game))
+                    val move = player.nextMove(game)
+                    game.makeMove(move)
                 }
             }
             game.printCurrentState(writer)
         }
-        writer.println("Congratulations Player:${game.getWinner()} has won the game")
+        if (game.getWinner() != null)
+            writer.println("Congratulations Player: ${game.getWinner()} has won the game")
+        else
+            writer.println("Game raw")
     }
 
     private fun welcomeAndInform() {
@@ -59,15 +68,21 @@ class Engine(config: Config) {
         val move: Move
         try {
             val position = InputProcessor.parse(moveString)
-            move = Move(player,position)
+            move = Move(player, position)
+            game.validateMove(move)
         } catch (e: ParseException) {
             writer.println("Invalid input, try again")
+            return askMove(player)
+        } catch (e: InvalidMoveException) {
+            writer.println(e.message!!)
             return askMove(player)
         }
         return move
     }
 
 }
+
+
 
 
 

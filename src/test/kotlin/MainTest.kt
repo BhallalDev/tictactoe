@@ -1,4 +1,4 @@
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import tictactoe.Config
 import tictactoe.exception.InvalidConfigException
@@ -72,7 +72,6 @@ class MainTest {
         } catch (ex: InvalidConfigException) {
             assertEquals(ex.message, "playerCount cannot be less than 3")
             checked = true
-
         }
         assert(checked)
     }

@@ -1,6 +1,5 @@
 package tictactoe
 
-import tictactoe.exception.DuplicateMoveException
 import tictactoe.exception.InvalidMoveException
 import tictactoe.io.Writer
 
@@ -72,12 +71,12 @@ class Game(private val players: List<Player>) {
         return allMovesMade()
     }
 
-    private fun validateMove(move: Move) {
+    fun validateMove(move: Move) {
         val position = move.position
         if ((position.row > players.size - 1) || (position.row > players.size - 1))
             throw InvalidMoveException("Move outside of boundaries")
         if (state[move.position.row][move.position.column] != null)
-            throw DuplicateMoveException("Move already made")
+            throw InvalidMoveException("Move already made")
     }
 
     private fun checkRows(): Pair<Boolean, Player?> {
@@ -167,8 +166,6 @@ class Game(private val players: List<Player>) {
                     }
                 }
             }
-
-
         }
         if (tempPlayer != null && foundWinner)
             return Pair(true, tempPlayer)

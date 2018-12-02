@@ -1,7 +1,5 @@
 package tictactoe
 
-import java.lang.NumberFormatException
-
 class InputProcessor {
     companion object {
         fun parse(input: String?): Position {

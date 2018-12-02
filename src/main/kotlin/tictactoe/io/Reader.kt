@@ -2,7 +2,6 @@ package tictactoe.io
 
 interface Reader {
     fun readLine(): String?
-
 }
 
 class ConsoleReader: Reader {

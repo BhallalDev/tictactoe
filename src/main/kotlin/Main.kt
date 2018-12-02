@@ -27,9 +27,11 @@ fun main(args: Array<String>) {
 }
 
 fun validateConfig(config: Config) {
-    if((config.playerCount != config.symbols.size) && config.playerCount >= 3){
+    if ((config.playerCount != config.symbols.size))
         throw InvalidConfigException("playerCount and number of symbols should be same")
-    }
+
+    if (config.playerCount < 3)
+        throw InvalidConfigException("playerCount cannot be less than 3")
 }
 
 fun loadConfig(inputStream: InputStream): Config {
@@ -37,11 +39,13 @@ fun loadConfig(inputStream: InputStream): Config {
     prop.load(inputStream)
     val playerCountString = prop.getProperty("playerCount")
     val playerCount: Int
+
     try {
         playerCount = Integer.parseInt(playerCountString)
     } catch (ex: NumberFormatException) {
         throw InvalidConfigException("playerCount can only be a number")
     }
+
     val symbols = stringToList(prop.getProperty("symbols"))
     return Config(
         playerCount = playerCount,
